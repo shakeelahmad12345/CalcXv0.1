@@ -1,5 +1,62 @@
 # CalcX
 
+C++-first Mathematics, Scientific, Engineering, Matrix, Statistics, and Data Analysis Calculator.
+
+## Current Release
+
+`v0.16` - Level 16 Professional GUI
+
+## Professional GUI
+
+The v0.16 browser application adds a dashboard, responsive sidebar navigation, module cards, global search filtering, local history, light/dark theme persistence, keyboard shortcuts, and Copy/Share/Export result actions. Existing calculator engines remain the source of truth and the Graphing and AI cards clearly identify future modules.
+
+## Existing Calculator Modules
+
+- Scientific expressions and DEG/RAD trigonometry
+- Programmer BIN/OCT/DEC/HEX conversion and bit operations
+- Engineering formulas with units and calculation breakdowns
+- Matrix and Linear Algebra operations
+- Statistics and Data Analysis with datasets, regression, and charts
+
+## Technology
+
+The repository is a dependency-free static HTML/CSS/JavaScript frontend with reusable C++ calculation modules and tests. No package manager, backend, database, or API existed in the inspected repository.
+
+## Run
+
+Serve `web/` with any static HTTP server. The verified preview is:
+
+```text
+http://localhost:8080/
+```
+
+The app also works when opening `web/index.html` directly in a modern browser.
+
+## Local Features
+
+- Dashboard and sidebar navigation
+- Global search with module filtering
+- Ctrl/Cmd+K focuses search; Ctrl/Cmd+H opens local history; Escape closes history
+- Light/dark theme persisted locally
+- Up to 50 local history records
+- Copy, Web Share with clipboard fallback, and TXT export
+
+## Cloud and Accounts Status
+
+Level 18 is not implemented. There is no Python runtime, FastAPI application, PostgreSQL service, Docker installation, or API boundary in this environment. No fake authentication, cloud synchronization, or insecure token storage was added. See [docs/level-18-cloud-accounts.md](docs/level-18-cloud-accounts.md).
+
+## Documentation
+
+- [Professional GUI](docs/level-16-professional-gui.md)
+- [Cloud and Accounts status](docs/level-18-cloud-accounts.md)
+- [Architecture](docs/architecture.md)
+
+## Roadmap
+
+- v0.16: Professional GUI (implemented)
+- v0.18: Cloud and Accounts (blocked pending backend/database environment)
+# CalcX
+
 AI-Powered Mathematics, Scientific, Engineering and Data Analysis Calculator.
 
 ## Current Version

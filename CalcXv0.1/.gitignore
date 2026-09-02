@@ -12,3 +12,14 @@ calcx.exe
 
 # Build directories
 build/
+
+# Local application data and backend secrets
+.env
+.env.*
+!.env.example
+venv/
+.venv/
+node_modules/
+dist/
+logs/
+*.sqlite3
