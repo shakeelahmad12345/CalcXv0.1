@@ -1,10 +1,10 @@
 # CalcX
 
-AI-Powered Mathematics & Engineering Computing Platform. Version 0.2 completes the Level 2 Advanced Calculator milestone with a C++ console application and a standalone browser application.
+AI-Powered Mathematics & Engineering Computing Platform. Version 0.3 adds a scientific calculator to the Level 2 browser application while preserving the v0.2 operations.
 
 ## Version
 
-`v0.2` — Level 2 / Advanced Calculator
+`v0.3` — Level 3 / Scientific Calculator
 
 ## Current features
 
@@ -17,6 +17,8 @@ AI-Powered Mathematics & Engineering Computing Platform. Version 0.2 completes t
 - Repeated calculations plus reset and quit controls
 - Responsive browser presentation in `web/` with the same Day 2 operations
 - Multiple calculations, clear/reset, and inline input validation
+- Scientific sin, cos, tan, asin, acos, atan, log, ln, e^x, pi, and e operations
+- DEG and RAD angle modes with inverse-trigonometric output conversion
 
 ## Technology used
 
@@ -33,6 +35,7 @@ AI-Powered Mathematics & Engineering Computing Platform. Version 0.2 completes t
 - Modulus accepts whole-number operands and protects against a zero divisor
 - Factorial accepts whole numbers from 0 through 170; `0!` is 1
 - Finite-number, domain, and operation-specific error handling in the browser and console applications
+- Tangent singularity protection and positive-domain validation for logarithms
 
 ## Project structure
 
@@ -98,13 +101,14 @@ Calculate again? (y/n): n
 
 - Only one operation is evaluated at a time; expression parsing is not available yet.
 - The browser presentation is a standalone JavaScript demo. The C++ console application remains the project’s primary implementation at this milestone.
-- There is no calculation history, scientific trigonometry, graphing, or equation solving yet.
+- Scientific calculations are currently available in the browser presentation; the C++ console remains the v0.2 console implementation.
+- There is no calculation history, expression parsing, graphing, or equation solving yet.
 
 ## Roadmap
 
-- v0.3 / Level 3: scientific calculator functions
-- Later milestones: expression parsing, programmer tools, engineering formulas, history, graphing, and equation solving
+- v0.4: expression engine
+- Later milestones: programmer tools, engineering formulas, history, graphing, and equation solving
 
-## Day 3 development note
+## Day 4 development note
 
-Day 3 stabilizes the Level 2 operations, centralizes browser validation and calculation logic, hardens error handling, and documents verification. See [`docs/day-3.md`](docs/day-3.md) for the milestone record.
+Day 4 adds the Level 3 scientific browser calculator, DEG/RAD support, scientific validation, and tangent singularity handling. See [`docs/day-4.md`](docs/day-4.md) for the milestone record.

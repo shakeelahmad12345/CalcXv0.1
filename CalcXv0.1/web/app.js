@@ -1,99 +1,81 @@
-function calculateFactorial(number) {
+const ANGLE_MODES = { DEG: "deg", RAD: "rad" };
+const constants = { pi: Math.PI, e: Math.E };
+
+function factorial(number) {
   if (!Number.isInteger(number)) return "Factorial requires a whole number.";
   if (number < 0) return "Factorial requires a non-negative integer.";
   if (number > 170) return "Factorial supports values from 0 to 170.";
-  let value = 1;
-  for (let current = 2; current <= number; current += 1) value *= current;
-  return value;
+  let result = 1;
+  for (let current = 2; current <= number; current += 1) result *= current;
+  return result;
+}
+
+function tidy(value) {
+  if (Math.abs(value) < 1e-12) return 0;
+  const rounded = Math.round(value);
+  return Math.abs(value - rounded) < 1e-12 ? rounded : value;
+}
+
+function radians(value, mode) { return mode === ANGLE_MODES.DEG ? value * Math.PI / 180 : value; }
+function angle(value, mode) { return mode === ANGLE_MODES.DEG ? value * 180 / Math.PI : value; }
+
+function scientific(name, value, mode) {
+  switch (name) {
+    case "sin": return tidy(Math.sin(radians(value, mode)));
+    case "cos": return tidy(Math.cos(radians(value, mode)));
+    case "tan": {
+      const input = radians(value, mode);
+      return Math.abs(Math.cos(input)) < 1e-12 ? "Tangent is undefined at this angle." : tidy(Math.tan(input));
+    }
+    case "asin": return value < -1 || value > 1 ? "Inverse sine requires a value from -1 to 1." : tidy(angle(Math.asin(value), mode));
+    case "acos": return value < -1 || value > 1 ? "Inverse cosine requires a value from -1 to 1." : tidy(angle(Math.acos(value), mode));
+    case "atan": return tidy(angle(Math.atan(value), mode));
+    case "log": return value <= 0 ? "Logarithm requires a positive number." : Math.log10(value);
+    case "ln": return value <= 0 ? "Natural logarithm requires a positive number." : Math.log(value);
+    case "exp": return Math.exp(value);
+    default: return constants[name];
+  }
 }
 
 const operations = {
-  add: { name: "Addition", hint: "Add two numbers together.", labels: ["First number", "Second number"], calculate: (a, b) => a + b },
-  subtract: { name: "Subtraction", hint: "Subtract the second number from the first.", labels: ["First number", "Second number"], calculate: (a, b) => a - b },
-  multiply: { name: "Multiplication", hint: "Multiply two numbers.", labels: ["First number", "Second number"], calculate: (a, b) => a * b },
-  divide: { name: "Division", hint: "Divide the first number by the second. Zero is not allowed as a divisor.", labels: ["Dividend", "Divisor"], calculate: (a, b) => b === 0 ? "Cannot divide by zero." : a / b },
-  modulus: { name: "Modulus", hint: "Find the remainder of two whole numbers.", labels: ["Whole number", "Divisor"], calculate: (a, b) => {
-    if (!Number.isInteger(a) || !Number.isInteger(b)) return "Modulus requires whole numbers.";
-    return b === 0 ? "Cannot perform modulus by zero." : a % b;
-  } },
-  power: { name: "Power", hint: "Raise a base to an exponent.", labels: ["Base", "Exponent"], calculate: (a, b) => a ** b },
-  sqrt: { name: "Square root", hint: "Find the non-negative square root of a number.", labels: ["Number", ""], unary: true, calculate: a => a < 0 ? "Square root requires a non-negative number." : Math.sqrt(a) },
-  cbrt: { name: "Cube root", hint: "Find the real cube root of a number.", labels: ["Number", ""], unary: true, calculate: a => Math.cbrt(a) },
-  percentage: { name: "Percentage", hint: "Calculate percentage of a value: percentage × value ÷ 100.", labels: ["Percentage", "Value"], calculate: (a, b) => (a / 100) * b },
-  absolute: { name: "Absolute value", hint: "Find the distance from zero.", labels: ["Number", ""], unary: true, calculate: a => Math.abs(a) },
-  factorial: { name: "Factorial", hint: "Use a whole number from 0 to 170.", labels: ["Whole number", ""], unary: true, calculate: calculateFactorial },
+  add: ["Addition", "Add two numbers together.", ["First number", "Second number"]], subtract: ["Subtraction", "Subtract the second number from the first.", ["First number", "Second number"]], multiply: ["Multiplication", "Multiply two numbers.", ["First number", "Second number"]], divide: ["Division", "Divide the first number by the second. Zero is not allowed as a divisor.", ["Dividend", "Divisor"]],
+  modulus: ["Modulus", "Find the remainder of two whole numbers.", ["Whole number", "Divisor"]], power: ["Power", "Raise a base to an exponent.", ["Base", "Exponent"]], sqrt: ["Square root", "Find the non-negative square root of a number.", ["Number", ""], true], cbrt: ["Cube root", "Find the real cube root of a number.", ["Number", ""], true], percentage: ["Percentage", "Calculate percentage of a value: percentage × value ÷ 100.", ["Percentage", "Value"]], absolute: ["Absolute value", "Find the distance from zero.", ["Number", ""], true], factorial: ["Factorial", "Use a whole number from 0 to 170.", ["Whole number", ""], true],
+  sin: ["Sine", "Calculate sine using the selected angle mode.", ["Angle", ""], true, true], cos: ["Cosine", "Calculate cosine using the selected angle mode.", ["Angle", ""], true, true], tan: ["Tangent", "Calculate tangent using the selected angle mode.", ["Angle", ""], true, true], asin: ["Inverse sine", "Calculate inverse sine; output follows the selected angle mode.", ["Value", ""], true, true], acos: ["Inverse cosine", "Calculate inverse cosine; output follows the selected angle mode.", ["Value", ""], true, true], atan: ["Inverse tangent", "Calculate inverse tangent; output follows the selected angle mode.", ["Value", ""], true, true], log: ["Log base 10", "Calculate the base-10 logarithm of a positive number.", ["Number", ""], true, true], ln: ["Natural logarithm", "Calculate the natural logarithm of a positive number.", ["Number", ""], true, true], exp: ["eˣ", "Calculate e raised to the given power.", ["Exponent", ""], true, true], pi: ["π constant", "Use the mathematical constant pi.", ["No input required", ""], true, false, true], e: ["e constant", "Use Euler's number.", ["No input required", ""], true, false, true],
 };
 
-function calculateOperation(name, values) {
-  const operation = operations[name];
-  if (!operation) return { error: "Choose a valid operation." };
+function calculateOperation(name, values, mode = ANGLE_MODES.DEG) {
+  const definition = operations[name];
+  if (!definition) return { error: "Choose a valid operation." };
+  if (definition[5]) return { value: constants[name] };
   const numbers = values.map(value => value.trim() === "" ? NaN : Number(value));
-  if (numbers.some(number => !Number.isFinite(number))) {
-    return { error: "Enter valid numbers", detail: "Use ordinary finite decimal values in every required field." };
-  }
-  const answer = operation.calculate(...numbers);
-  if (typeof answer === "string" || !Number.isFinite(answer)) {
-    return { error: typeof answer === "string" ? answer : "This calculation does not produce a finite real number." };
-  }
-  return { value: answer };
-}
-
-function formatNumber(value) {
-  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 12 }).format(value);
+  if (numbers.some(value => !Number.isFinite(value))) return { error: "Enter valid numbers", detail: "Use ordinary finite decimal values in every required field." };
+  let answer;
+  if (definition[4]) answer = scientific(name, numbers[0], mode);
+  else if (name === "factorial") answer = factorial(numbers[0]);
+  else if (name === "modulus") answer = !Number.isInteger(numbers[0]) || !Number.isInteger(numbers[1]) ? "Modulus requires whole numbers." : numbers[1] === 0 ? "Cannot perform modulus by zero." : numbers[0] % numbers[1];
+  else if (name === "divide") answer = numbers[1] === 0 ? "Cannot divide by zero." : numbers[0] / numbers[1];
+  else if (name === "sqrt") answer = numbers[0] < 0 ? "Square root requires a non-negative number." : Math.sqrt(numbers[0]);
+  else if (name === "cbrt") answer = Math.cbrt(numbers[0]);
+  else if (name === "percentage") answer = numbers[0] / 100 * numbers[1];
+  else if (name === "absolute") answer = Math.abs(numbers[0]);
+  else if (name === "power") answer = numbers[0] ** numbers[1];
+  else if (name === "add") answer = numbers[0] + numbers[1];
+  else if (name === "subtract") answer = numbers[0] - numbers[1];
+  else answer = numbers[0] * numbers[1];
+  return typeof answer === "string" || !Number.isFinite(answer) ? { error: typeof answer === "string" ? answer : "This calculation does not produce a finite real number." } : { value: answer };
 }
 
 function initializeCalculator() {
-  const form = document.querySelector("#calculator-form");
-  const first = document.querySelector("#first-number");
-  const second = document.querySelector("#second-number");
-  const firstLabel = document.querySelector("#first-label");
-  const secondField = document.querySelector("#second-field");
-  const operationName = document.querySelector("#operation-name");
-  const hint = document.querySelector("#operation-hint");
-  const result = document.querySelector("#result");
-  let currentOperation = "add";
-
-  function showResult(title, detail, isError = false) {
-    result.classList.toggle("error", isError);
-    result.replaceChildren(
-      Object.assign(document.createElement("span"), { className: "result-label", textContent: isError ? "CHECK INPUT" : "RESULT" }),
-      Object.assign(document.createElement("strong"), { textContent: title }),
-      Object.assign(document.createElement("span"), { className: "result-detail", textContent: detail }),
-    );
-  }
-
-  function selectOperation(name) {
-  currentOperation = name;
-  const operation = operations[name];
-  document.querySelectorAll(".operation").forEach(button => button.classList.toggle("active", button.dataset.operation === name));
-  operationName.textContent = operation.name;
-  firstLabel.childNodes[0].nodeValue = `${operation.labels[0]} `;
-  secondField.hidden = Boolean(operation.unary);
-  second.required = !operation.unary;
-  if (!operation.unary) secondField.childNodes[0].nodeValue = `${operation.labels[1]} `;
-  hint.textContent = operation.hint;
-  showResult("Ready when you are", operation.hint);
-  first.focus();
-}
-
-  document.querySelectorAll(".operation").forEach(button => button.addEventListener("click", () => selectOperation(button.dataset.operation)));
-  form.addEventListener("submit", event => {
-    event.preventDefault();
-    const operation = operations[currentOperation];
-    const calculation = calculateOperation(currentOperation, operation.unary ? [first.value] : [first.value, second.value]);
-    if (calculation.error) {
-      showResult(calculation.error, calculation.detail || operation.hint, true);
-      return;
-    }
-    showResult(formatNumber(calculation.value), `${operation.name} completed successfully.`);
-  });
-  document.querySelector("#reset-button").addEventListener("click", () => {
-    form.reset();
-    showResult("Ready when you are", operations[currentOperation].hint);
-    first.focus();
-  });
-  selectOperation(currentOperation);
+  const form = document.querySelector("#calculator-form"), first = document.querySelector("#first-number"), second = document.querySelector("#second-number"), firstLabel = document.querySelector("#first-label"), secondField = document.querySelector("#second-field"), operationName = document.querySelector("#operation-name"), hint = document.querySelector("#operation-hint"), result = document.querySelector("#result");
+  let current = "add", mode = ANGLE_MODES.DEG;
+  function show(title, detail, error = false) { result.classList.toggle("error", error); result.replaceChildren(Object.assign(document.createElement("span"), { className: "result-label", textContent: error ? "CHECK INPUT" : "RESULT" }), Object.assign(document.createElement("strong"), { textContent: title }), Object.assign(document.createElement("span"), { className: "result-detail", textContent: detail })); }
+  function select(name) { current = name; const definition = operations[name]; operationName.textContent = definition[0]; firstLabel.childNodes[0].nodeValue = `${definition[2][0]} `; secondField.hidden = Boolean(definition[3]); second.required = !definition[3]; first.disabled = Boolean(definition[5]); if (!definition[3]) secondField.childNodes[0].nodeValue = `${definition[2][1]} `; hint.textContent = definition[1]; show("Ready when you are", definition[1]); if (!definition[5]) first.focus(); document.querySelectorAll(".operation").forEach(button => button.classList.toggle("active", button.dataset.operation === name)); }
+  document.querySelectorAll(".operation").forEach(button => button.addEventListener("click", () => select(button.dataset.operation)));
+  form.addEventListener("submit", event => { event.preventDefault(); const definition = operations[current], calculation = calculateOperation(current, definition[3] ? [first.value] : [first.value, second.value], mode); calculation.error ? show(calculation.error, calculation.detail || definition[1], true) : show(new Intl.NumberFormat("en-US", { maximumFractionDigits: 12 }).format(calculation.value), `${definition[0]} completed successfully.`); });
+  document.querySelector("#reset-button").addEventListener("click", () => { form.reset(); show("Ready when you are", operations[current][1]); first.focus(); });
+  document.querySelectorAll("input[name=angle-mode]").forEach(control => control.addEventListener("change", event => { mode = event.target.value; show("Angle mode updated", mode === ANGLE_MODES.DEG ? "Trigonometric angles use degrees." : "Trigonometric angles use radians."); }));
+  select(current);
 }
 
 if (typeof document !== "undefined") initializeCalculator();
-if (typeof module !== "undefined") module.exports = { calculateFactorial, calculateOperation, operations };
+if (typeof module !== "undefined") module.exports = { ANGLE_MODES, calculateOperation, calculateScientific: scientific, operations };

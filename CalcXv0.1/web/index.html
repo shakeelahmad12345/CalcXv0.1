@@ -3,21 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="CalcX v0.2 advanced calculator demo">
-  <title>CalcX v0.2</title>
+  <meta name="description" content="CalcX v0.3 scientific calculator">
+  <title>CalcX v0.3</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main class="shell">
     <section class="hero" aria-labelledby="page-title">
       <p class="eyebrow">CALCX / COMPUTE WITH CLARITY</p>
-      <h1 id="page-title">Advanced Calculator</h1>
-      <p class="intro">A focused browser presentation of CalcX v0.2. Choose an operation, enter values, and get a clear result.</p>
+      <h1 id="page-title">Scientific Calculator</h1>
+      <p class="intro">A focused browser calculator for everyday and scientific computation.</p>
     </section>
     <section class="calculator-card" aria-label="CalcX advanced calculator">
-      <div class="card-heading"><div><p class="label">CURRENT MODULE</p><h2 id="operation-name">Addition</h2></div><span class="version">v0.2</span></div>
+      <div class="card-heading"><div><p class="label">CURRENT MODULE</p><h2 id="operation-name">Addition</h2></div><span class="version">v0.3</span></div>
+      <fieldset class="mode-selector"><legend>Angle mode</legend><label><input type="radio" name="angle-mode" value="deg" checked> DEG</label><label><input type="radio" name="angle-mode" value="rad"> RAD</label></fieldset>
       <div class="operation-grid" role="group" aria-label="Choose an operation">
         <button class="operation active" data-operation="add" type="button">+<span>Add</span></button><button class="operation" data-operation="subtract" type="button">−<span>Subtract</span></button><button class="operation" data-operation="multiply" type="button">×<span>Multiply</span></button><button class="operation" data-operation="divide" type="button">÷<span>Divide</span></button><button class="operation" data-operation="modulus" type="button">%<span>Modulus</span></button><button class="operation" data-operation="power" type="button">xʸ<span>Power</span></button><button class="operation" data-operation="sqrt" type="button">√<span>Square root</span></button><button class="operation" data-operation="cbrt" type="button">∛<span>Cube root</span></button><button class="operation" data-operation="percentage" type="button">%<span>Percentage</span></button><button class="operation" data-operation="absolute" type="button">|x|<span>Absolute</span></button><button class="operation" data-operation="factorial" type="button">x!<span>Factorial</span></button>
+      </div>
+      <p class="section-label">SCIENTIFIC</p>
+      <div class="operation-grid scientific-grid" role="group" aria-label="Choose a scientific operation">
+        <button class="operation" data-operation="sin" type="button">sin<span>Sine</span></button><button class="operation" data-operation="cos" type="button">cos<span>Cosine</span></button><button class="operation" data-operation="tan" type="button">tan<span>Tangent</span></button><button class="operation" data-operation="asin" type="button">sin⁻¹<span>Inverse sine</span></button><button class="operation" data-operation="acos" type="button">cos⁻¹<span>Inverse cosine</span></button><button class="operation" data-operation="atan" type="button">tan⁻¹<span>Inverse tangent</span></button><button class="operation" data-operation="log" type="button">log<span>Base 10</span></button><button class="operation" data-operation="ln" type="button">ln<span>Natural log</span></button><button class="operation" data-operation="exp" type="button">eˣ<span>Exponential</span></button><button class="operation" data-operation="pi" type="button">π<span>Pi</span></button><button class="operation" data-operation="e" type="button">e<span>Euler's number</span></button>
       </div>
       <form id="calculator-form" novalidate>
         <div class="fields"><label id="first-label" for="first-number">First number <input id="first-number" inputmode="decimal" autocomplete="off" placeholder="0" required></label><label id="second-field" for="second-number">Second number <input id="second-number" inputmode="decimal" autocomplete="off" placeholder="0" required></label></div>
@@ -26,7 +31,7 @@
       </form>
       <output class="result" id="result" aria-live="polite"><span class="result-label">RESULT</span><strong>Ready when you are</strong><span class="result-detail">Use a module above to begin.</span></output>
     </section>
-    <p class="footer-note">CalcX v0.2 · Deterministic calculations · No external libraries</p>
+    <p class="footer-note">CalcX v0.3 · Deterministic calculations · No external libraries</p>
   </main>
   <script src="app.js"></script>
 </body>
