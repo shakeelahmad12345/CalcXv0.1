@@ -27,5 +27,34 @@
   document.querySelectorAll("[data-bit-action]").forEach(button => button.addEventListener("click", () => { try { programmerInput.value = CalcXProgrammer.format(CalcXProgrammer.manipulate(read(), Number($("#bit-position").value), button.dataset.bitAction, state.width), state.base); refresh(); } catch (error) { programmerError(error.message); } }));
   $("#ascii-button").addEventListener("click", () => { try { const value = programmerInput.value.trim(); programmerResult.classList.remove("error"); programmerResult.textContent = /^\d+$/.test(value) ? `Character ${String.fromCharCode(Number(value))}` : `ASCII ${CalcXProgrammer.ascii(value, "toCode")}`; } catch (error) { programmerError(error.message); } });
   $("#programmer-clear").addEventListener("click", () => { programmerInput.value = "0"; refresh(); });
+  const engineeringResult = $("#engineering-result");
+  function showEngineering(calculation) {
+    const values = calculation.value != null ? `${CalcXEngineering.format(calculation.value, calculation.unit)}` : `I1 = ${CalcXEngineering.format(calculation.value1, calculation.unit)}; I2 = ${CalcXEngineering.format(calculation.value2, calculation.unit)}`;
+    engineeringResult.classList.remove("error");
+    engineeringResult.innerHTML = `<strong>${values}</strong><span>Formula: ${calculation.formula || "Result"}</span><span>Calculation: ${calculation.calculation || "Completed successfully."}</span>${calculation.warning ? `<span>${calculation.warning}</span>` : ""}`;
+  }
+  function field(form, name) { return form.elements[name].value; }
+  document.querySelectorAll(".engineering-form").forEach(form => form.addEventListener("submit", event => {
+    event.preventDefault();
+    try {
+      const type = form.dataset.engineering;
+      let calculation;
+      if (type === "ohm") calculation = CalcXEngineering.ohmsLaw(field(form, "unknown"), field(form, "unknown") === "voltage" ? null : field(form, "voltage"), field(form, "unknown") === "current" ? null : field(form, "current"), field(form, "unknown") === "resistance" ? null : field(form, "resistance"));
+      if (type === "power") calculation = CalcXEngineering.power("power", field(form, "voltage"), field(form, "current"), null);
+      if (type === "network") calculation = { value: field(form, "network") === "series" ? CalcXEngineering.series(field(form, "values").split(",")) : CalcXEngineering.parallel(field(form, "values").split(",")), formula: field(form, "network") === "series" ? "Rtotal = R1 + R2 + ..." : "1/Rtotal = Σ(1/R)", calculation: field(form, "values"), unit: "Ω" };
+      if (type === "divider") calculation = field(form, "divider") === "voltage" ? CalcXEngineering.voltageDivider(field(form, "input"), field(form, "r1"), field(form, "r2")) : CalcXEngineering.currentDivider(field(form, "input"), field(form, "r1"), field(form, "r2"));
+      if (type === "led") calculation = CalcXEngineering.led(field(form, "supply"), field(form, "forward"), field(form, "current"), Number(field(form, "rating")));
+      if (type === "time") calculation = field(form, "timeType") === "rc" ? CalcXEngineering.rc(field(form, "resistance"), field(form, "capacitance")) : CalcXEngineering.rl(field(form, "inductance"), field(form, "resistance"));
+      if (type === "waves") calculation = field(form, "waveType") === "frequency" ? CalcXEngineering.frequency("frequency", field(form, "a")) : field(form, "waveType") === "period" ? CalcXEngineering.frequency("period", field(form, "a")) : CalcXEngineering.wavelength("wavelength", field(form, "b"), field(form, "a"));
+      if (type === "sampling") calculation = CalcXEngineering.sampling(field(form, "frequency"));
+      if (type === "db") calculation = CalcXEngineering.decibels(field(form, "dbType"), field(form, "ratio"));
+      showEngineering(calculation);
+    } catch (error) { engineeringResult.classList.add("error"); engineeringResult.textContent = error.message; }
+  }));
+  const quickSearch = $("#quick-search-input"), quickMenu = $("#quick-search-menu");
+  quickSearch.addEventListener("focus", () => { quickMenu.hidden = false; });
+  quickSearch.addEventListener("input", () => { const query = quickSearch.value.toLowerCase(); quickMenu.querySelectorAll("button").forEach(button => { button.hidden = query && !button.textContent.toLowerCase().includes(query); }); });
+  quickMenu.querySelectorAll("[data-quick]").forEach(button => button.addEventListener("click", () => { setMode("expression"); input.value += button.dataset.quick; input.focus(); quickMenu.hidden = true; }));
+  quickMenu.querySelectorAll("[data-quick-mode]").forEach(button => button.addEventListener("click", () => { setMode(button.dataset.quickMode); quickMenu.hidden = true; }));
   setMode("expression"); refresh(); input.focus();
 })();

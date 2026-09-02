@@ -85,6 +85,20 @@
 .programmer-result.error {
 	color: #ff9b9b;
 }
+
+.quick-search { display: block; margin: 1rem 0; color: var(--muted); }
+.quick-menu { display: grid; gap: 1rem; margin: -.5rem 0 1.5rem; padding: 1rem; border: 1px solid var(--line); border-radius: .75rem; background: var(--surface-strong); }
+.quick-menu section { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.quick-menu strong { width: 100%; color: var(--accent); font-size: .72rem; letter-spacing: .08em; }
+.quick-menu button { padding: .45rem .65rem; border: 1px solid var(--line); border-radius: .35rem; color: var(--text); background: transparent; }
+.engineering-section { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.engineering-section h3 { margin: 0 0 .35rem; color: var(--accent); }
+.engineering-section p { color: var(--muted); font-size: .88rem; }
+.engineering-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .75rem; align-items: end; }
+.engineering-form .calculate { min-height: 3rem; }
+.engineering-result { display: grid; gap: .5rem; margin-top: 1.5rem; padding: 1.25rem; border: 1px solid var(--accent); border-radius: .75rem; background: rgba(119,240,196,.08); }
+.engineering-result strong { font-size: 1.5rem; color: var(--accent); }
+.engineering-result.error { border-color: var(--danger); color: var(--danger); }
 .mode-selector {
 	display: flex;
 	gap: 1rem;
