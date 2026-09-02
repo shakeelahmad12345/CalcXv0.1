@@ -4,75 +4,68 @@ AI-Powered Mathematics & Engineering Computing Platform.
 
 ## Current Version
 
-`v0.6` — Level 6 / Engineering Calculator
+`v0.7` - Level 7 / Matrix and Linear Algebra
 
-CalcX is a dependency-free browser calculator preserving the v0.3 scientific calculator, v0.4 expression engine, and v0.5 programmer calculator.
+CalcX is a dependency-free browser calculator preserving scientific, expression, programmer, and engineering modes.
 
 ## Features
 
-- Basic arithmetic, roots, percentage, absolute value, and factorial
-- Scientific functions, constants, and DEG/RAD angle modes
-- Safe expression tokenizer/parser with precedence, parentheses, unary operators, and nested functions
+- Basic and scientific calculations with DEG/RAD modes
+- Safe expression tokenizer/parser with precedence, parentheses, unary operators, nested functions, and constants
 - Programmer BIN/OCT/DEC/HEX conversion, bitwise operations, shifts, fixed widths, ASCII, and bit manipulation
-- Engineering mode with Ohm’s law, power, series/parallel networks, dividers, LED design, RC/RL time constants, frequency/period, wavelength, Nyquist sampling, and power/voltage dB
-- Engineering formulas, calculation substitutions, validation, SI normalization, and categorized quick input
+- Engineering mode with circuit laws, power, resistor networks, dividers, LED design, time constants, waves, sampling, and decibels
+- Linear Algebra mode with matrix input, addition, subtraction, multiplication, transpose, determinant, inverse, rank, Gaussian elimination, RREF, linear systems, eigenvalues, and eigenvectors
+- Formula and calculation details, validation, responsive layout, and categorized quick search
 
 ## Technology and Structure
 
-Plain HTML/CSS/JavaScript browser application with reusable C++ engineering functions and tests.
+Plain HTML/CSS/JavaScript browser application with reusable C++ engineering and matrix modules.
 
 ```text
 CalcXv0.1/
-├── src/
-│   ├── main.cpp
-│   ├── engineering.h
-│   └── engineering.cpp
-├── tests/
-│   └── engineering_test.cpp
-├── web/
-│   ├── index.html
-│   ├── styles.css
-│   ├── app.js
-│   ├── expression-engine.js
-│   ├── programmer-engine.js
-│   └── engineering-engine.js
-├── docs/
-└── README.md
+  src/main.cpp
+  src/engineering.h, src/engineering.cpp
+  src/matrix.h, src/matrix.cpp
+  tests/engineering_test.cpp
+  tests/matrix_test.cpp
+  web/index.html
+  web/styles.css
+  web/app.js
+  web/expression-engine.js
+  web/programmer-engine.js
+  web/engineering-engine.js
+  web/matrix-engine.js
+  docs/
 ```
 
 ## Run
 
-Serve `web/` with any static HTTP server. The verified local preview uses:
-
-```powershell
-# from CalcXv0.1/web
-php -S localhost:8080
-```
-
-Opening `web/index.html` directly also works in modern browsers.
+Serve the `web` directory with any static HTTP server. The verified preview is `http://localhost:8080/`.
 
 ## C++ Build and Tests
 
 ```powershell
+g++ -std=c++17 -Wall -Wextra -pedantic src/matrix.cpp tests/matrix_test.cpp -o matrix-tests.exe
+.\matrix-tests.exe
 g++ -std=c++17 -Wall -Wextra -pedantic src/engineering.cpp tests/engineering_test.cpp -o engineering-tests.exe
 .\engineering-tests.exe
 ```
 
-The existing console program is built with the same warning flags from `src/main.cpp`.
+## Matrix Algorithms
 
-## Engineering Formulas
+Matrix calculations use a reusable Matrix abstraction and tolerance-based Gauss-Jordan row reduction. The same reduction approach supports RREF, rank, inverse, and linear-system analysis. Determinants use pivoted elimination. Eigenvalues are supported for 2x2 matrices and diagonal 3x3 matrices; complex eigenvalues are intentionally not displayed.
 
-`V = I × R`, `P = V × I`, `Rseries = ΣR`, `1/Rparallel = Σ(1/R)`, `Vout = Vin × R2 / (R1 + R2)`, `τ = RC`, `τ = L/R`, `f = 1/T`, `v = fλ`, `fs ≥ 2fmax`, power `dB = 10 log10(P2/P1)`, and equal-impedance voltage `dB = 20 log10(V2/V1)`.
+## Validation
 
-Engineering inputs are normalized internally to SI units and results use readable prefixes including p, n, µ, m, k, M, and G.
+Matrix dimensions, square-matrix requirements, incompatible multiplication, singular inverse requests, malformed values, inconsistent systems, no-solution systems, and infinitely-many-solution systems return readable inline errors. Floating-point zero checks use a defined tolerance.
 
 ## Testing
 
-Browser verification covers previous modes, representative engineering calculations, formula/result breakdowns, invalid input, search categories, mode switching, runtime errors, and desktop/tablet/mobile overflow. C++ coverage is provided in `tests/engineering_test.cpp`.
+Browser verification covers previous modes plus matrix operations, rectangular transpose, determinant, inverse, rank, linear systems, eigenvalues, singular matrices, search categories, mode switching, responsive layout, and runtime errors. C++ unit tests are provided in `tests/`.
 
 ## Limitations and Roadmap
 
-The C++ console remains the v0.2 console implementation; v0.6 engineering features are browser-facing with a reusable C++ module. Expression history, a larger formula library, graphing, and equation solving are not implemented.
+The C++ console remains the earlier console implementation; v0.7 matrix functionality is browser-facing with a reusable C++ matrix module. Eigenvalue support is intentionally limited to real 2x2 and diagonal 3x3 cases. History, broader symbolic algebra, and a larger formula library remain future work.
 
-- v0.6: Engineering calculator (implemented)
-- v0.7: Engineering formula library
+- v0.7: Matrix and Linear Algebra (implemented)
+- v0.8: Symbolic and expanded linear algebra tools

@@ -51,10 +51,35 @@
       showEngineering(calculation);
     } catch (error) { engineeringResult.classList.add("error"); engineeringResult.textContent = error.message; }
   }));
-  const quickSearch = $("#quick-search-input"), quickMenu = $("#quick-search-menu");
-  quickSearch.addEventListener("focus", () => { quickMenu.hidden = false; });
+  const quickSearch = $("#quick-search-input"), quickMenu = $("#quick-search-menu"), linearMenu = $("#quick-linear-menu");
+  quickSearch.addEventListener("focus", () => { quickMenu.hidden = false; linearMenu.hidden = false; });
   quickSearch.addEventListener("input", () => { const query = quickSearch.value.toLowerCase(); quickMenu.querySelectorAll("button").forEach(button => { button.hidden = query && !button.textContent.toLowerCase().includes(query); }); });
   quickMenu.querySelectorAll("[data-quick]").forEach(button => button.addEventListener("click", () => { setMode("expression"); input.value += button.dataset.quick; input.focus(); quickMenu.hidden = true; }));
   quickMenu.querySelectorAll("[data-quick-mode]").forEach(button => button.addEventListener("click", () => { setMode(button.dataset.quickMode); quickMenu.hidden = true; }));
+  linearMenu.querySelectorAll("[data-quick-mode]").forEach(button => button.addEventListener("click", () => { setMode(button.dataset.quickMode); linearMenu.hidden = true; quickMenu.hidden = true; }));
+  const matrixResult = $("#matrix-result");
+  const parseMatrix = value => value.split(";").map(row => row.split(",").map(Number));
+  const matrixText = matrix => matrix.map(row => `[ ${row.map(value => Number(value.toFixed(6))).join("  ")} ]`).join("\n");
+  $("#matrix-calculate").addEventListener("click", () => {
+    try {
+      const operation = $("#matrix-operation").value, a = parseMatrix($("#matrix-a").value), b = parseMatrix($("#matrix-b").value), vector = parseMatrix($("#matrix-vector").value);
+      let value, formula = "";
+      if (operation === "add") { value = CalcXMatrix.add(a, b); formula = "A + B"; }
+      if (operation === "subtract") { value = CalcXMatrix.subtract(a, b); formula = "A - B"; }
+      if (operation === "multiply") { value = CalcXMatrix.multiply(a, b); formula = "Cij = Σ Aik Bkj"; }
+      if (operation === "transpose") { value = CalcXMatrix.transpose(a); formula = "Aᵀ"; }
+      if (operation === "determinant") { value = CalcXMatrix.determinant(a); formula = "det(A)"; }
+      if (operation === "inverse") { value = CalcXMatrix.inverse(a); formula = "A⁻¹ by Gauss-Jordan elimination"; }
+      if (operation === "rank") { value = CalcXMatrix.rank(a); formula = "rank(A) by row reduction"; }
+      if (operation === "echelon" || operation === "rref") { const reduction = CalcXMatrix.echelon(a, operation === "rref"); value = reduction.matrix; formula = `${operation === "rref" ? "RREF" : "Row echelon form"}; Steps: ${reduction.steps.join("; ") || "none"}`; }
+      if (operation === "solve") { const solution = CalcXMatrix.solve(a, vector); value = solution.values ? solution.values.map((item, index) => [`x${index + 1}`, item]) : solution.state; formula = "Ax = b by Gauss-Jordan elimination"; }
+      if (operation === "eigenvalues") { value = CalcXMatrix.eigen(a); formula = "det(A - λI) = 0"; }
+      if (operation === "eigenvectors") { const values = CalcXMatrix.eigen(a); value = CalcXMatrix.eigenvectors(a, values); formula = "(A - λI)v = 0"; }
+      const display = Array.isArray(value) && Array.isArray(value[0]) && typeof value[0][0] === "number" ? matrixText(value) : Array.isArray(value) ? value.map(item => Array.isArray(item) ? `${item[0]} = ${item[1]}` : `λ = ${Number(item.toFixed(6))}`).join("\n") : String(value);
+      matrixResult.classList.remove("error"); matrixResult.replaceChildren(Object.assign(document.createElement("strong"), { textContent: display }), Object.assign(document.createElement("span"), { textContent: `Formula: ${formula}` }), Object.assign(document.createElement("span"), { textContent: `Dimensions: ${Array.isArray(value) && Array.isArray(value[0]) ? `${value.length} × ${value[0].length}` : "scalar/result"}` }));
+    } catch (error) { matrixResult.classList.add("error"); matrixResult.textContent = error.message; }
+  });
+  $("#matrix-clear").addEventListener("click", () => { $("#matrix-a").value = ""; $("#matrix-b").value = ""; $("#matrix-vector").value = ""; matrixResult.textContent = "Choose a matrix operation."; });
+  quickMenu.querySelectorAll("button").forEach(button => { if (/Determinant|Linear Systems|Eigenvalues/.test(button.textContent)) button.addEventListener("click", () => { setMode("linear-algebra"); $("#matrix-operation").value = button.textContent.toLowerCase().replace(" ", ""); quickMenu.hidden = true; }); });
   setMode("expression"); refresh(); input.focus();
 })();

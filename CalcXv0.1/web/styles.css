@@ -99,6 +99,15 @@
 .engineering-result { display: grid; gap: .5rem; margin-top: 1.5rem; padding: 1.25rem; border: 1px solid var(--accent); border-radius: .75rem; background: rgba(119,240,196,.08); }
 .engineering-result strong { font-size: 1.5rem; color: var(--accent); }
 .engineering-result.error { border-color: var(--danger); color: var(--danger); }
+.quick-menu-linear { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: -.5rem 0 1.5rem; padding: 1rem; border: 1px solid var(--line); border-radius: .75rem; background: var(--surface-strong); }
+.quick-menu-linear strong { width: 100%; color: var(--accent); font-size: .72rem; letter-spacing: .08em; }
+.quick-menu-linear button { padding: .45rem .65rem; border: 1px solid var(--line); border-radius: .35rem; color: var(--text); background: transparent; }
+.matrix-section { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.matrix-section h3 { margin: 0 0 .35rem; color: var(--accent); }
+.matrix-section p { color: var(--muted); font-size: .88rem; }
+.matrix-result { display: grid; white-space: pre-wrap; gap: .5rem; margin-top: 1.5rem; padding: 1.25rem; border: 1px solid var(--accent); border-radius: .75rem; background: rgba(119,240,196,.08); }
+.matrix-result strong { color: var(--accent); font-family: Consolas, monospace; }
+.matrix-result.error { border-color: var(--danger); color: var(--danger); }
 .mode-selector {
 	display: flex;
 	gap: 1rem;
