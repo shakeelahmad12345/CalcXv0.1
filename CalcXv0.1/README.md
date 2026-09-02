@@ -1,10 +1,10 @@
 # CalcX
 
-AI-Powered Mathematics & Engineering Computing Platform. Version 0.3 adds a scientific calculator to the Level 2 browser application while preserving the v0.2 operations.
+AI-Powered Mathematics & Engineering Computing Platform. Version 0.5 includes the v0.4 expression engine and v0.5 programmer calculator in the browser application, preserving earlier operations.
 
 ## Version
 
-`v0.3` — Level 3 / Scientific Calculator
+`v0.5` — Level 5 / Programmer Calculator
 
 ## Current features
 
@@ -19,6 +19,9 @@ AI-Powered Mathematics & Engineering Computing Platform. Version 0.3 adds a scie
 - Multiple calculations, clear/reset, and inline input validation
 - Scientific sin, cos, tan, asin, acos, atan, log, ln, e^x, pi, and e operations
 - DEG and RAD angle modes with inverse-trigonometric output conversion
+- Expression tokenizer, recursive-descent parser, precedence, parentheses, unary operators, nested functions, constants, and safe evaluation
+- Programmer base conversion for binary, octal, decimal, and hexadecimal
+- Bitwise AND, OR, XOR, NOT, shifts, fixed widths, ASCII, and bit manipulation
 
 ## Technology used
 
@@ -46,7 +49,9 @@ CalcXv0.1/
 ├── web/
 │   ├── index.html
 │   ├── styles.css
-│   └── app.js
+│   ├── app.js
+│   ├── expression-engine.js
+│   └── programmer-engine.js
 ├── README.md
 ├── .gitignore
 └── LICENSE
@@ -97,18 +102,27 @@ Result: 256
 Calculate again? (y/n): n
 ```
 
+## Expression Engine (v0.4)
+
+Enter expressions such as `(25 + 5) * 10 / 2`, `sqrt(abs(-25))`, or `sin(pi / 2)`. The tokenizer produces number, name, operator, and parenthesis tokens; a recursive-descent parser evaluates the token stream with operator precedence and right-associative power. No `eval()` or `Function()` is used. DEG/RAD applies to trigonometric functions.
+
+## Programmer Calculator (v0.5)
+
+Switch to Programmer mode to convert BIN, OCT, DEC, and HEX values. Use AND, OR, XOR, NOT, left/right shifts, 8/16/32/64-bit widths, ASCII conversion, and set/clear/toggle/test bit operations. Input is validated against the selected base and bit positions/counts are bounded by the selected width.
+
 ## Current limitations
 
 - Only one operation is evaluated at a time; expression parsing is not available yet.
 - The browser presentation is a standalone JavaScript demo. The C++ console application remains the project’s primary implementation at this milestone.
-- Scientific calculations are currently available in the browser presentation; the C++ console remains the v0.2 console implementation.
+- Scientific, expression, and programmer features are currently available in the browser presentation; the C++ console remains the v0.2 console implementation.
 - There is no calculation history, expression parsing, graphing, or equation solving yet.
 
 ## Roadmap
 
-- v0.4: expression engine
-- Later milestones: programmer tools, engineering formulas, history, graphing, and equation solving
+- v0.4: expression engine (implemented)
+- v0.5: programmer calculator (implemented)
+- Later milestones: engineering formulas, history, graphing, and equation solving
 
-## Day 4 development note
+## Day 5 and Day 6 development notes
 
-Day 4 adds the Level 3 scientific browser calculator, DEG/RAD support, scientific validation, and tangent singularity handling. See [`docs/day-4.md`](docs/day-4.md) for the milestone record.
+Day 5 adds the expression engine. Day 6 adds the programmer calculator. See [`docs/day-5.md`](docs/day-5.md) and [`docs/day-6.md`](docs/day-6.md).

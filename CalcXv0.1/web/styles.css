@@ -1,3 +1,90 @@
+.mode-tabs,
+.control-row,
+.quick-examples {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	align-items: center;
+}
+
+.mode-tabs {
+	margin: 1.5rem 0;
+}
+
+.mode-tab,
+.control-row button,
+.quick-examples button {
+	border: 1px solid rgba(139, 233, 197, 0.35);
+	border-radius: 0.35rem;
+	background: rgba(139, 233, 197, 0.08);
+	color: #dff8ee;
+	cursor: pointer;
+	padding: 0.65rem 0.85rem;
+}
+
+.mode-tab.active,
+.control-row button.active,
+.mode-tab:focus-visible,
+.control-row button:focus-visible,
+.quick-examples button:focus-visible {
+	background: #8be9c5;
+	color: #10221d;
+	outline: 2px solid #dff8ee;
+	outline-offset: 2px;
+}
+
+.section-label {
+	color: #9aa9a4;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	margin: 1.4rem 0 0.7rem;
+	text-transform: uppercase;
+}
+
+.mode-selector {
+	border: 0;
+	color: #9aa9a4;
+	display: flex;
+	gap: 1rem;
+	margin: 1.25rem 0;
+	padding: 0;
+}
+
+.mode-selector label {
+	color: #edf7f3;
+	cursor: pointer;
+	font-weight: 700;
+}
+
+.mode-selector input {
+	accent-color: #8be9c5;
+}
+
+.inline-field {
+	align-items: center;
+	color: #9aa9a4;
+	display: inline-flex;
+	gap: 0.4rem;
+}
+
+.inline-field input {
+	max-width: 4rem;
+}
+
+.programmer-result {
+	background: rgba(139, 233, 197, 0.08);
+	border: 1px solid rgba(139, 233, 197, 0.2);
+	border-radius: 0.5rem;
+	display: grid;
+	gap: 0.45rem;
+	margin-top: 1.25rem;
+	padding: 1rem;
+}
+
+.programmer-result.error {
+	color: #ff9b9b;
+}
 .mode-selector {
 	display: flex;
 	gap: 1rem;
